@@ -42,12 +42,14 @@ for i in range(size):
                 blur_tensor[i,j,k] = np.float64(0.0)
             #print(type(tensor[i,j,k]))
 
+# Create threshhold
+for idx, iteration in enumerate(np.linspace(0, 4, 20)):
 
-for threshhold in range(0, 10):
     # Mask low values to avoid plotting every point
-    mask = blur_tensor > (1 - threshhold/10)
+    threshhold = round(0.9 - iteration/10, 3)
+    mask = blur_tensor > threshhold
 
-    # Plot 3D scatter
+    # Plot 3D bar
     fig = plt.figure(figsize=(8, 6))
     ax = fig.add_subplot(111, projection='3d')
     p = ax.bar3d(
@@ -59,10 +61,36 @@ for threshhold in range(0, 10):
 
     # Axes settings
     ax.set_box_aspect((1, 1, 1))  # equal aspect ratio
+    ax.set_title("3D Conical Tensor Distribution with Threshhold")
+    ax.set_xlim([-10, 10])
+    ax.set_ylim([-10, 10])
+    ax.set_zlim([0, 20])
+    #plt.show()
+    plt.savefig(f"plots/threshhold/threshold_{idx}.png")
+    plt.close()
+
+# Create angle
+for idx, iteration in enumerate(np.linspace(0, 180, 90)):
+
+    # Mask low values to avoid plotting every point
+    mask = blur_tensor > 0.6
+
+    # Plot 3D scatter
+    fig = plt.figure(figsize=(8, 6))
+    ax = fig.add_subplot(111, projection='3d')
+    p = ax.scatter(
+        X[mask], Y[mask], Z[mask],
+        c=blur_tensor[mask], cmap="inferno", marker="."
+    )
+    ax.view_init(elev=30, azim=idx-60, roll=0)
+
+    # Axes settings
+    ax.set_box_aspect((1, 1, 1))  # equal aspect ratio
     ax.set_title("3D Conical Tensor Distribution")
     ax.set_xlim([-10, 10])
     ax.set_ylim([-10, 10])
     ax.set_zlim([0, 20])
     fig.colorbar(p, ax=ax, label="Value")
     #plt.show()
-    plt.savefig(f"/plots/threshold/test_{threshhold}.png")
+    plt.savefig(f"plots/angle/angle_{idx}.png")
+    plt.close()
