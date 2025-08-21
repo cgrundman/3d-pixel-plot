@@ -4,6 +4,7 @@ import random
 
 # Parameters
 size = 50       # cube size (NxNxN)
+m_size = 25
 height = 1.0    # peak value at cone center
 r = 3 # radius to edge of cube
 
@@ -41,7 +42,7 @@ for i in range(size):
             #print(type(tensor[i,j,k]))
 
 # Create threshhold
-for idx, iteration in enumerate(np.linspace(0, 180, 50)):
+for idx, iteration in enumerate(np.linspace(90, 180, 3)):
 
     # Mask low values to avoid plotting every point
     threshhold = round(0.9 - iteration/450, 3)
@@ -71,11 +72,11 @@ for idx, iteration in enumerate(np.linspace(0, 180, 50)):
     ax1.zaxis.set_tick_params(labelbottom=False)
     plt.tight_layout()
     #plt.show()
-    plt.savefig(f"plots/threshhold/threshold_{idx}.png")
+    plt.savefig(f"figures/threshhold/threshold_{idx}.png")
     plt.close()
 
 # Create angle
-for idx, iteration in enumerate(np.linspace(0, 180, 90)):
+for idx, iteration in enumerate(np.linspace(0, 180, 1)):
 
     # Mask low values to avoid plotting every point
     mask = blur_tensor > 0.1
@@ -86,7 +87,7 @@ for idx, iteration in enumerate(np.linspace(0, 180, 90)):
     ax1 = fig.add_subplot(121, projection='3d')
     p1 = ax1.scatter(
         X[mask], Y[mask], Z[mask],
-        c=blur_tensor[mask], cmap="inferno", marker=".", s=25
+        c=blur_tensor[mask], cmap="inferno", marker=".", s=m_size
     )
     ax1.view_init(elev=30, azim=idx-45, roll=0)
 
@@ -96,16 +97,18 @@ for idx, iteration in enumerate(np.linspace(0, 180, 90)):
     ax1.set_xlim([-10, 10])
     ax1.set_ylim([-10, 10])
     ax1.set_zlim([0, 20])
+    
     ax1.xaxis.set_tick_params(labelbottom=False)
     ax1.yaxis.set_tick_params(labelbottom=False)
     ax1.zaxis.set_tick_params(labelbottom=False)
-    fig.colorbar(p1, ax=ax1, label="Value", fraction=0.035, pad=0.02)
+    ax1.set_xlabel("x")
+    #fig.colorbar(p1, ax=ax1, label="Value", fraction=0.035, pad=0.02)
 
     # Plot 3D scatter under view
     ax2 = fig.add_subplot(122, projection='3d')
     p2 = ax2.scatter(
         X[mask], Y[mask], Z[mask],
-        c=blur_tensor[mask], cmap="inferno", marker=".", s=25
+        c=blur_tensor[mask], cmap="inferno", marker=".", s=m_size
     )
     ax2.view_init(elev=-30, azim=idx-60, roll=0)
 
@@ -121,5 +124,5 @@ for idx, iteration in enumerate(np.linspace(0, 180, 90)):
     fig.colorbar(p2, ax=ax2, label="Value", fraction=0.035, pad=0.02)
     plt.tight_layout()
     #plt.show()
-    plt.savefig(f"plots/angle/angle_{idx}.png")
+    plt.savefig(f"figures/angle/angle_{idx}.png")
     plt.close()
